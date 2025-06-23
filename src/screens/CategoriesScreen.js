@@ -1,47 +1,161 @@
-import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+import React, { useState, useRef } from 'react';
+import { View, Text, StyleSheet, TouchableWithoutFeedback, ScrollView, Alert, Animated, ImageBackground, } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 
-const categories = ['Pop', 'Hip Hop', 'Lo Fi', 'Jazz', 'R&B', 'Int’l'];
+const categoryData = [
+  { label: 'R&B', image: require('../assets/getty.jpg') },
+  { label: 'Intn’l', image: require('../assets/getty2.jpg') },
+  { label: 'Pop', image: require('../assets/gettyimage.jpg') },
+  { label: 'Hip Hop', image: require('../assets/abc.jpg') },
+  { label: 'Lo Fi', image: require('../assets/images.jpeg') },
+  { label: 'Jazz', image: require('../assets/rb.jpeg') },
+  { label: 'Sony', image: require('../assets/download.jpeg') },
+  { label: 'Best', image: require('../assets/xyz.jpeg') },
+];
 
 const CategoriesScreen = ({ navigation }) => {
+  const [selectedCategories, setSelectedCategories] = useState([]);
+  const scaleAnimations = useRef(categoryData.map(() => new Animated.Value(1))).current;
+
+  useFocusEffect(
+    React.useCallback(() => {
+      setSelectedCategories([]);
+    }, [])
+  );
+
+  const toggleCategory = (category, index) => {
+    const isSelected = selectedCategories.includes(category);
+    const newScale = isSelected ? 1 : 1.05;
+
+    Animated.spring(scaleAnimations[index], {
+      toValue: newScale,
+      useNativeDriver: true,
+    }).start();
+
+    if (isSelected) {
+      setSelectedCategories(selectedCategories.filter((c) => c !== category));
+    } else {
+      if (selectedCategories.length >= 3) {
+        Alert.alert(
+          'Limit Reached',
+          'You can select up to 3 genres only.',
+          [
+            {
+              text: 'OK',
+              onPress: () => {
+                setSelectedCategories([]);
+                scaleAnimations.forEach((anim) => anim.setValue(1));
+              },
+            },
+          ],
+          { cancelable: false }
+        );
+        return;
+      }
+      setSelectedCategories([...selectedCategories, category]);
+    }
+  };
+
+  const handleContinue = () => {
+    if (selectedCategories.length < 1) {
+      Alert.alert('Select Genre', 'Please select at least one genre.');
+      return;
+    }
+    navigation.navigate('Home', { selectedCategories });
+  };
+
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.logo}>music360</Text>
-      <Text style={styles.heading}>Select at least 3 categories you'd like to listen to</Text>
+    <View style={styles.container}>
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
+        <View style={styles.logoContainer}>
+          <Text style={styles.logo}>
+            music
+            <Text style={styles.logoHighlight}>360</Text>
+          </Text>
+        </View>
 
-      <View style={styles.categoryGrid}>
-        {categories.map((category, index) => (
-          <TouchableOpacity key={index} style={styles.categoryBox}>
-            <Text style={styles.categoryText}>{category}</Text>
-          </TouchableOpacity>
-        ))}
-      </View>
+        <View style={styles.titleContainer}>
+          <Text style={styles.heading}>
+            Select at least 3 genres you’d like to listen to
+          </Text>
+        </View>
 
-      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Home')}>
-        <Text style={styles.buttonText}>Continue</Text>
-      </TouchableOpacity>
-    </ScrollView>
+        <View style={styles.categoryGrid}>
+          {categoryData.map((item, index) => {
+            const isSelected = selectedCategories.includes(item.label);
+            return (
+              <TouchableWithoutFeedback
+                key={index}
+                onPress={() => toggleCategory(item.label, index)}
+              >
+                <Animated.View
+                  style={[
+                    styles.categoryBox,
+                    {
+                      transform: [{ scale: scaleAnimations[index] }],
+                      borderColor: isSelected ? '#F59E0B' : 'transparent',
+                      borderWidth: isSelected ? 2 : 0,
+                    },
+                  ]}
+                >
+                  <ImageBackground
+                    source={item.image}
+                    style={styles.imageBackground}
+                    imageStyle={{ borderRadius: 15 }}
+                  >
+                    <Text style={styles.categoryText}>{item.label}</Text>
+                  </ImageBackground>
+                </Animated.View>
+              </TouchableWithoutFeedback>
+            );
+          })}
+        </View>
+      </ScrollView>
+
+      <TouchableWithoutFeedback onPress={handleContinue}>
+        <View style={styles.fixedButton}>
+          <Text style={styles.buttonText}>Continue</Text>
+        </View>
+      </TouchableWithoutFeedback>
+    </View>
   );
 };
 
+export default CategoriesScreen;
+
+
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#1C003B',
-    flexGrow: 1,
-    padding: 20,
-    justifyContent: 'center',
+    flex: 1,
+    backgroundColor: '#221224',
+  },
+  scrollContainer: {
+    paddingHorizontal: 20,
+    paddingTop: 80,
+    paddingBottom: 120, 
+  },
+  logoContainer: {
+    alignItems: 'center',
+    marginBottom: 35,
   },
   logo: {
-    fontSize: 30,
+    fontSize: 36,
     color: '#fff',
-    fontWeight: 'bold',
-    textAlign: 'center',
-    marginBottom: 40,
+    fontWeight: '900',
+  },
+  logoHighlight: {
+    color: '#2471F2',
+    textShadowColor: '#FF4500',
+  },
+  titleContainer: {
+    marginBottom: 25,
+    alignItems: 'center',
+    paddingHorizontal: 10,
   },
   heading: {
     fontSize: 25,
+    fontWeight: '600',
     color: '#fff',
-    marginBottom: 20,
     textAlign: 'center',
   },
   categoryGrid: {
@@ -50,33 +164,41 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   categoryBox: {
-    backgroundColor: '#343434',
-    paddingVertical: 20,
-    paddingHorizontal: 10,
-    borderRadius: 10,
-    borderColor: 'white',
-    borderWidth: 1,
+    width: '48%',
+    height: 140,
+    borderRadius: 15,
     marginBottom: 15,
-    width: '47%',
-    alignItems: 'center',
+    overflow: 'hidden',
+  },
+  imageBackground: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    padding: 12,
   },
   categoryText: {
     color: '#fff',
     fontWeight: 'bold',
-    fontSize: 16,
+    fontSize: 20,
   },
-  button: {
+  fixedButton: {
+    position: 'absolute',
+    bottom: 30,
+    left: 20,
+    right: 20,
     backgroundColor: '#FFA500',
-    padding: 12,
-    borderRadius: 50,
+    paddingVertical: 14,
+    borderRadius: 30,
     alignItems: 'center',
-    marginTop: 30,
+    elevation: 5,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
   },
   buttonText: {
     color: '#000000',
     fontWeight: 'bold',
-    fontSize: 23,
+    fontSize: 25,
   },
 });
 
-export default CategoriesScreen;
