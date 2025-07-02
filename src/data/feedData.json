@@ -1,0 +1,42 @@
+[
+  {
+    "id": 1,
+    "username": "PepeJamez",
+    "userImage": "user1.jpg",
+    "caption": "Does it glitter like a flavor? Who thinks so kladfl;ka;sdflasdflnalhr;ghldfkngdlfjghsdfh",
+    "likes": 225,
+    "liked": false,
+    "comments": [
+      {
+        "id": 1,
+        "username": "Hassan_1",
+        "text": "I loved the song",
+        "time": "12 ago",
+        "likes": 12,
+        "avatar": "https://i.pravatar.cc/150?img=1"
+      },
+      {
+        "id": 2,
+        "username": "Mike_1",
+        "text": "Lorem ipsum dolor sit amet consectetur.",
+        "time": "12 ago",
+        "likes": 12,
+        "avatar": "https://i.pravatar.cc/150?img=2"
+      }
+    ],
+    "media": "post1.jpg",
+    "music": "Original Audio"
+  },
+  {
+    "id": 2,
+    "username": "LanaWills",
+    "userImage": "user2.jpg",
+    "caption": "Starting with your song main riff or hook isn ideal for every songwriter. Some songwriters prefer to start at the beginning of their track by writing a killer intro, which will lead them naturally into the rest of the song, while others will get the lyrics down first, and then worry about the tune afterwards. ",
+    "media": "post2.jpg",
+    "music":"Original Audio",
+    "likes": 215,
+    "liked": false,
+    "comments": []
+
+  }
+]

@@ -1,0 +1,18 @@
+{
+  "discover": [
+    { "name": "Music360", "avatar": "ab.jpeg" },
+    { "name": "Kiki's Drum", "avatar": "listen.jpeg" },
+    { "name": "Sade", "avatar": "rb.jpeg" }
+  ],
+  "friends": [
+    { "name": "Amit", "avatar": "rb.jpeg" },
+    { "name": "Riya", "avatar": "rb.jpeg" }
+  ],
+  "followers": [
+    { "name": "John", "avatar": "rb.jpeg" }
+  ],
+  "following": [
+    { "name": "Sophie", "avatar": "rb.jpeg" },
+    { "name": "Mike", "avatar": "rb.jpeg" }
+  ]
+}

@@ -9,15 +9,11 @@ import {
   FlatList,
   Image,
 } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import Feather from 'react-native-vector-icons/Feather';
-import AntDesign from 'react-native-vector-icons/AntDesign';
-
+import BottomNav from '../components/BottomNav';
 
 const HomeScreen = () => {
-  const navigation = useNavigation();
-  const [activeTab, setActiveTab] = useState('Home');
+  const [selectedTab, setSelectedTab] = useState(null);
 
   const justForYou = [
     { title: 'Daily Mix', subtitle: 'aljfh', image: require('../assets/download.jpeg') },
@@ -43,17 +39,10 @@ const HomeScreen = () => {
     </View>
   );
 
-  const tabs = [
-    { icon: 'home', label: 'Home', lib: 'FontAwesome5' },
-    { icon: 'find', label: 'Feed', lib: 'AntDesign' },
-    { icon: 'compact-disc', label: 'Player', lib: 'FontAwesome5' },
-    { icon: 'comment-dots', label: 'Messages', lib: 'FontAwesome5' },
-    { icon: 'users', label: 'Community', lib: 'Feather' },
-  ];
-
   return (
     <View style={styles.container}>
       <ScrollView>
+        {/* Header */}
         <View style={styles.header}>
           <View style={styles.searchContainer}>
             <FontAwesome5 name="search" size={18} color="#aaa" style={styles.searchIcon} />
@@ -66,6 +55,7 @@ const HomeScreen = () => {
           <View style={styles.avatar} />
         </View>
 
+        {/* Promo Card */}
         <View style={styles.promoCard}>
           <View style={styles.promoContent}>
             <View style={styles.textContainer}>
@@ -84,14 +74,30 @@ const HomeScreen = () => {
           </View>
         </View>
 
+        {/* Tabs */}
         <View style={styles.tabs}>
           {['Music', 'Artist', 'Store'].map((tab, index) => (
-            <TouchableOpacity key={index} style={styles.tabButton}>
-              <Text style={styles.tabText}>{tab}</Text>
+            <TouchableOpacity
+              key={index}
+              style={[
+                styles.tabButton,
+                selectedTab === tab && styles.activeTabButton
+              ]}
+              onPress={() => setSelectedTab(tab)}
+            >
+              <Text
+                style={[
+                  styles.tabText,
+                  selectedTab === tab && styles.activeTabText
+                ]}
+              >
+                {tab}
+              </Text>
             </TouchableOpacity>
           ))}
         </View>
 
+        {/* Sections */}
         <View style={{ paddingHorizontal: 16 }}>
           <Text style={styles.sectionTitle}>Just for you</Text>
           <FlatList
@@ -115,62 +121,15 @@ const HomeScreen = () => {
         </View>
       </ScrollView>
 
+      {/* Floating Action Button */}
       <TouchableOpacity style={styles.floatingButton}>
         <Text style={styles.floatingButtonText}>+</Text>
       </TouchableOpacity>
 
-      <View style={styles.bottomNavContainer}>
-        <View style={styles.bottomNavRow}>
-          {tabs.map((item, i) => (
-            <View style={styles.navBox} key={i}>
-              <TouchableOpacity
-                style={styles.navItem}
-                onPress={() => {
-                  setActiveTab(item.label);
-                  if (item.label === 'Community'){
-                    navigation.navigate('Community');
-                  }
-                }}
-              >
-                {item.lib === 'Feather' ? (
-                  <Feather
-                    name={item.icon}
-                    size={22}
-                    color={activeTab === item.label ? '#F9A825' : '#fff'}
-                  />
-                ) : item.lib === 'AntDesign' ? (
-                  <AntDesign
-                    name={item.icon}
-                    size={22}
-                    color={activeTab === item.label ? '#F9A825' : '#fff'}
-                  />
-                ) : (
-                  <FontAwesome5
-                    name={item.icon}
-                    size={22}
-                    solid
-                    color={activeTab === item.label ? '#F9A825' : '#fff'}
-                  />
-                )}
-
-                <Text
-                  style={[
-                    styles.navLabel,
-                    { color: activeTab === item.label ? '#F9A825' : '#fff' },
-                  ]}
-                >
-                  {item.label}
-                </Text>
-              </TouchableOpacity>
-            </View>
-          ))}
-        </View>
-      </View>
-
+      <BottomNav />
     </View>
   );
 };
-
 
 const styles = StyleSheet.create({
   container: {
@@ -192,6 +151,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     marginBottom: 8,
     paddingVertical: 6,
+    borderWidth: .1,
+    borderColor: '#aaa'
   },
   searchIcon: {
     marginRight: 8,
@@ -199,7 +160,7 @@ const styles = StyleSheet.create({
   searchInput: {
     flex: 1,
     color: '#fff',
-    fontSize: 15
+    fontSize: 15,
   },
   avatar: {
     width: 40,
@@ -207,7 +168,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     marginLeft: 10,
     backgroundColor: '#888',
-    marginTop: -11
+    marginTop: -11,
   },
   promoCard: {
     margin: 20,
@@ -218,18 +179,15 @@ const styles = StyleSheet.create({
     elevation: 4,
     position: 'relative',
   },
-
   promoContent: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
   },
-
   textContainer: {
     flex: 1,
     paddingRight: 20,
   },
-
   promoText: {
     fontSize: 20,
     fontWeight: '700',
@@ -237,7 +195,6 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     width: 100,
   },
-
   referButton: {
     backgroundColor: '#1F51FF',
     paddingVertical: 12,
@@ -246,13 +203,11 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
     marginTop: 20,
   },
-
   referButtonText: {
     color: '#fff',
     fontWeight: '600',
     fontSize: 15,
   },
-
   imageContainer: {
     position: 'absolute',
     right: 0,
@@ -262,22 +217,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-
-  image: {
-    width: '100%',
-    height: '100%',
-  },
-
   promoImage: {
     width: '100%',
     height: '100%',
     resizeMode: 'contain',
   },
-
-
   tabs: {
     flexDirection: 'row',
-    // justifyContent: 'center',
     paddingLeft: 11,
     marginBottom: 10,
   },
@@ -288,7 +234,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 5,
     backgroundColor: '#171717',
     borderWidth: 1,
-    borderColor: '#5C5C5C'
+    borderColor: '#5C5C5C',
   },
   activeTabButton: {
     backgroundColor: '#F59E0B',
@@ -304,20 +250,6 @@ const styles = StyleSheet.create({
   sectionTitle: {
     color: '#fff',
     fontSize: 18,
-    fontWeight: '600',
-    marginLeft: 20,
-    paddingLeft: 11,
-    marginTop: 20,
-  },
-  card: {
-    width: 140,
-    marginRight: 15,
-    borderRadius: 14,
-    overflow: 'hidden',
-  },
-  sectionTitle: {
-    color: '#fff',
-    fontSize: 18,
     fontWeight: '700',
     marginBottom: 12,
     marginTop: 20,
@@ -325,39 +257,34 @@ const styles = StyleSheet.create({
   flatListContent: {
     paddingRight: 8,
   },
-  ccard: {
-    width: 150,
-    marginRight: 16,
-    borderRadius: 12,
+  card: {
+    width: 140,
+    marginRight: 15,
+    borderRadius: 14,
     overflow: 'hidden',
   },
-
   cardImage: {
     width: '100%',
     height: 140,
     borderRadius: 12,
   },
-
   cardTextContainer: {
     flex: 1,
     paddingLeft: 6,
     gap: 4,
-    marginTop: 8
+    marginTop: 8,
   },
-
   cardTitle: {
     fontSize: 18,
     fontWeight: '700',
     color: '#fff',
     marginBottom: 2,
   },
-
   cardSubtitle: {
     fontSize: 14,
     color: '#aaa',
     lineHeight: 16,
   },
-
   floatingButton: {
     position: 'absolute',
     bottom: 80,
@@ -373,41 +300,8 @@ const styles = StyleSheet.create({
     fontSize: 60,
     color: '#fff',
     fontWeight: '700',
-    marginTop: -5
+    marginTop: -5,
   },
-  bottomNavContainer: {
-    backgroundColor: '#1c1b1e',
-    paddingVertical: 15,
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-    elevation: 8,
-  },
-
-  bottomNavRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-
-  navBox: {
-    flex: 1,
-    alignItems: 'center',
-  },
-
-  navItem: {
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-
-  navLabel: {
-    fontSize: 13,
-    marginTop: 4,
-    color: '#fff',
-    textAlign: 'center',
-  },
-
-
-
 });
 
 export default HomeScreen;
