@@ -114,7 +114,7 @@ const CategoriesScreen = ({ navigation }) => {
 
       <TouchableWithoutFeedback onPress={handleContinue}>
         <View style={styles.fixedButton}>
-          <Text style={styles.buttonText}>Continue</Text>
+          <Text style={styles.buttonText}>Continue </Text>
         </View>
       </TouchableWithoutFeedback>
     </View>
