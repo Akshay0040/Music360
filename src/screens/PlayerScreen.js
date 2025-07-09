@@ -1,13 +1,13 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import BottomNav from '../components/BottomNav';
+// import BottomNav from '../components/BottomNav';
 
 const PlayerScreen = () => (
   <View style={styles.wrapper}>
     <View style={styles.container}>
       <Text style={styles.text}>Player Screen</Text>
     </View>
-    <BottomNav />
+    {/* <BottomNav /> */}
   </View>
 );
 

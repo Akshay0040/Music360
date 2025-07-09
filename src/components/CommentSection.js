@@ -14,11 +14,19 @@ import { TouchableWithoutFeedback, Keyboard } from 'react-native';
 const CommentSection = ({ comments, onClose, onSend }) => {
   const [text, setText] = useState('');
   const [likedComments, setLikedComments] = useState({});
+  const [placeholderText, setPlaceholderText] = useState('Add a comment...');
+
+
 
   const handleSend = () => {
     if (text.trim()) {
       onSend(text.trim());
       setText('');
+      setPlaceholderText('Comment added');
+
+      setTimeout(() => {
+        setPlaceholderText('Add a comment...');
+      }, 2000);
     }
   };
 
@@ -33,17 +41,25 @@ const CommentSection = ({ comments, onClose, onSend }) => {
   };
 
   const renderItem = ({ item }) => (
+
     <View style={styles.commentBox}>
+
       <Image source={{ uri: item.avatar }} style={styles.avatar} />
+
       <View style={styles.commentContent}>
+
         <View style={styles.row}>
           <Text style={styles.username}>{item.username}</Text>
           <Text style={styles.time}>{item.time}</Text>
         </View>
+
         <Text style={styles.commentText}>{item.text}</Text>
+
         <Text style={styles.reply}>Reply</Text>
       </View>
+
       <View style={styles.likeSection}>
+
         <TouchableOpacity onPress={() => toggleLike(item.id)}>
           <Icon
             name={likedComments[item.id] ? "heart" : "heart-outline"}
@@ -51,9 +67,11 @@ const CommentSection = ({ comments, onClose, onSend }) => {
             color={likedComments[item.id] ? "red" : "gray"}
           />
         </TouchableOpacity>
+
         <Text style={styles.likeCount}>
           {item.likes + (likedComments[item.id] ? 1 : 0)}
         </Text>
+
       </View>
     </View>
   );
@@ -69,7 +87,6 @@ const CommentSection = ({ comments, onClose, onSend }) => {
 
         <View style={styles.dragHandle} />
 
-          {/* Comments List */}
         <FlatList
           data={comments}
           keyExtractor={(item) => item.id.toString()}
@@ -77,22 +94,25 @@ const CommentSection = ({ comments, onClose, onSend }) => {
           showsVerticalScrollIndicator={false}
         />
 
-        {/* Input Field */}
         <View style={styles.inputContainer}>
+
           <Image
             source={{ uri: 'https://i.pravatar.cc/150?img=3' }}
             style={styles.avatarSmall}
           />
+
           <TextInput
             value={text}
             onChangeText={setText}
-            placeholder="Add a comment...."
+            placeholder={placeholderText}
             placeholderTextColor="#ccc"
             style={styles.input}
           />
+
           <TouchableOpacity onPress={handleSend} style={styles.sendBtn}>
             <Icon name="arrow-up" size={24} color="#000" />
           </TouchableOpacity>
+          
         </View>
       </View>
     </TouchableWithoutFeedback>
@@ -116,13 +136,13 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   dragHandle: {
-  width:100,
-  height: 5,
-  backgroundColor: '#fff',
-  borderRadius: 30,
-  marginBottom: 18,
-  alignSelf: 'center',
-},
+    width: 100,
+    height: 5,
+    backgroundColor: '#fff',
+    borderRadius: 30,
+    marginBottom: 18,
+    alignSelf: 'center',
+  },
   commentBox: {
     flexDirection: 'row',
     alignItems: 'flex-start',
@@ -151,7 +171,7 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontWeight: 'bold',
     marginRight: 8,
-    fontSize:18,
+    fontSize: 18,
   },
   time: {
     color: 'gray',
@@ -176,30 +196,37 @@ const styles = StyleSheet.create({
     marginTop: 2,
   },
   inputContainer: {
-  flexDirection: 'row',
-  alignItems: 'center',
-  backgroundColor: '#2c1b2f',
-  borderRadius: 15,
-  paddingHorizontal: 12,
-  paddingVertical: 6,
-  marginTop: 10,
-  marginBottom: 16,
-},
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#2c1b2f',
+    borderRadius: 15,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    marginTop: 10,
+    marginBottom: 16,
+  },
 
-input: {
-  flex: 1,
-  color: '#fff',
-  paddingVertical: 8,
-  paddingHorizontal: 10,
-  fontSize: 15,
-},
+  input: {
+    flex: 1,
+    color: '#fff',
+    paddingVertical: 8,
+    paddingHorizontal: 10,
+    fontSize: 15,
+  },
+  feedbackText: {
+    color: '#fff',
+    fontSize: 12,
+    marginLeft: 10,
+    marginTop: 4,
+  },
 
-sendBtn: {
-  backgroundColor: '#fbbf24',
-  borderRadius: 12,
-  padding: 10,
-  justifyContent: 'center',
-  alignItems: 'center',
-  marginLeft: 8,
-},
+
+  sendBtn: {
+    backgroundColor: '#fbbf24',
+    borderRadius: 12,
+    padding: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginLeft: 8,
+  },
 });

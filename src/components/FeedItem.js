@@ -112,7 +112,7 @@ const FeedItem = ({ post, onLike, onAddComment }) => {
           comments={post.comments}
           onClose={() => setShowComments(false)}
           onSend={(text) => {
-            onAddComment(text); 
+            onAddComment(text);
           }}
         />
       </Modal>
@@ -143,7 +143,7 @@ const styles = StyleSheet.create({
   // ✅ Caption Section
   captionContainer: {
     position: 'absolute',
-    bottom: hp(12),
+    bottom: hp(13.5),
     left: wp(3),
     right: wp(20),
     flexDirection: 'column',
@@ -186,10 +186,10 @@ const styles = StyleSheet.create({
   actions: {
     position: 'absolute',
     right: wp(4),
-    bottom: hp(15),
+    bottom: hp(18), // ⬆️ Increased from 15 to 17 (move all buttons up)
     alignItems: 'center',
     justifyContent: 'space-between',
-    height: hp(25),
+    height: hp(24), // ⬇️ Slightly reduced height for tighter layout
   },
   iconWrapper: {
     alignItems: 'center',
@@ -204,7 +204,7 @@ const styles = StyleSheet.create({
 
   // ✅ Bottom most user icon
   userImageBox: {
-    marginTop: hp(1),
+    marginTop: hp(0.1),
     alignItems: 'center',
   },
   userIcon: {

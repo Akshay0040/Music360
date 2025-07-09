@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import BottomNav from '../components/BottomNav';
+// import BottomNav from '../components/BottomNav';
 import appData from '../data/appdata.json';
 
 const filters = ['Discover', 'Friends', "Test", 'Followers', 'Following',];
@@ -161,7 +161,7 @@ const CommunityScreen = () => {
                 </View>
             </View>
 
-            <BottomNav />
+            {/* <BottomNav /> */}
         </View>
     );
 };

@@ -10,10 +10,15 @@ import {
   Image,
 } from 'react-native';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import BottomNav from '../components/BottomNav';
+import { useRoute } from '@react-navigation/native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context'; // ✅ Add this
 
 const HomeScreen = () => {
-  const [selectedTab, setSelectedTab] = useState(null);
+  const route = useRoute();
+  const insets = useSafeAreaInsets(); 
+
+  const selectedCategories = route.params?.selectedCategories || [];
+  const [selectedTab, setSelectedTab] = useState('Music');
 
   const justForYou = [
     { title: 'Daily Mix', subtitle: 'aljfh', image: require('../assets/download.jpeg') },
@@ -41,8 +46,11 @@ const HomeScreen = () => {
 
   return (
     <View style={styles.container}>
-      <ScrollView>
-        {/* Header */}
+      <ScrollView
+        style={{ backgroundColor: '#221224' }}
+        contentContainerStyle={{ paddingBottom: 120 + insets.bottom }} // ✅ respect BottomNav height + safe area
+      >
+        {/* Header & Search */}
         <View style={styles.header}>
           <View style={styles.searchContainer}>
             <FontAwesome5 name="search" size={18} color="#aaa" style={styles.searchIcon} />
@@ -55,7 +63,7 @@ const HomeScreen = () => {
           <View style={styles.avatar} />
         </View>
 
-        {/* Promo Card */}
+        {/* Promo Banner */}
         <View style={styles.promoCard}>
           <View style={styles.promoContent}>
             <View style={styles.textContainer}>
@@ -121,12 +129,13 @@ const HomeScreen = () => {
         </View>
       </ScrollView>
 
-      {/* Floating Action Button */}
-      <TouchableOpacity style={styles.floatingButton}>
+      {/* Floating Button */}
+      <TouchableOpacity
+        activeOpacity={0.8}
+        style={[styles.floatingButton, { bottom: 80 + insets.bottom }]}
+      >
         <Text style={styles.floatingButtonText}>+</Text>
       </TouchableOpacity>
-
-      <BottomNav />
     </View>
   );
 };
@@ -178,6 +187,7 @@ const styles = StyleSheet.create({
     height: 150,
     elevation: 4,
     position: 'relative',
+    overflow: 'hidden',
   },
   promoContent: {
     flexDirection: 'row',
@@ -287,7 +297,7 @@ const styles = StyleSheet.create({
   },
   floatingButton: {
     position: 'absolute',
-    bottom: 80,
+    // bottom: 0,
     right: 20,
     backgroundColor: '#3B82F6',
     width: 60,
@@ -295,6 +305,11 @@ const styles = StyleSheet.create({
     borderRadius: 29.5,
     justifyContent: 'center',
     alignItems: 'center',
+    elevation: 8,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
   },
   floatingButtonText: {
     fontSize: 60,
