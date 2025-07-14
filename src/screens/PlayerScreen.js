@@ -17,15 +17,21 @@ const styles = StyleSheet.create({
     backgroundColor: '#1b0e1e',
     justifyContent: 'space-between',
   },
+
+
   container: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },
+
+  
   text: {
     color: '#fff',
     fontSize: 18,
   },
 });
+
+
 
 export default PlayerScreen;
