@@ -1,5 +1,15 @@
 import React, { useState, useRef } from 'react';
-import { View, Text, StyleSheet, TouchableWithoutFeedback, ScrollView, Alert, Animated, ImageBackground, } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableWithoutFeedback,
+  ScrollView,
+  Alert,
+  Animated,
+  ImageBackground,
+  TouchableOpacity,
+} from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 
 const categoryData = [
@@ -61,16 +71,19 @@ const CategoriesScreen = ({ navigation }) => {
       Alert.alert('Select Genre', 'Please select at least one genre.');
       return;
     }
-    navigation.navigate('Home', { selectedCategories });
+
+    navigation.navigate('MainTabs', {
+      screen: 'Home',
+      params: { selectedCategories },
+    });
   };
 
   return (
     <View style={styles.container}>
-      <ScrollView contentContainerStyle={styles.scrollContainer}>
+      <ScrollView contentContainerStyle={styles.scrollContainer} showsVerticalScrollIndicator={false}>
         <View style={styles.logoContainer}>
           <Text style={styles.logo}>
-            music
-            <Text style={styles.logoHighlight}>360</Text>
+            music<Text style={styles.logoHighlight}>360</Text>
           </Text>
         </View>
 
@@ -93,7 +106,7 @@ const CategoriesScreen = ({ navigation }) => {
                     styles.categoryBox,
                     {
                       transform: [{ scale: scaleAnimations[index] }],
-                      borderColor: isSelected ? '#F59E0B' : 'transparent',
+                      borderColor: isSelected ? '#FFA500' : 'transparent',
                       borderWidth: isSelected ? 2 : 0,
                     },
                   ]}
@@ -112,17 +125,14 @@ const CategoriesScreen = ({ navigation }) => {
         </View>
       </ScrollView>
 
-      <TouchableWithoutFeedback onPress={handleContinue}>
-        <View style={styles.fixedButton}>
-          <Text style={styles.buttonText}>Continue </Text>
-        </View>
-      </TouchableWithoutFeedback>
+      <TouchableOpacity style={styles.fixedButton} onPress={handleContinue} >
+        <Text style={styles.buttonText}>Continue</Text>
+      </TouchableOpacity>
     </View>
   );
 };
 
 export default CategoriesScreen;
-
 
 const styles = StyleSheet.create({
   container: {
@@ -131,12 +141,12 @@ const styles = StyleSheet.create({
   },
   scrollContainer: {
     paddingHorizontal: 20,
-    paddingTop: 80,
-    paddingBottom: 120, 
+    paddingTop: 70,
+    paddingBottom: 130,
   },
   logoContainer: {
     alignItems: 'center',
-    marginBottom: 35,
+    marginBottom: 25,
   },
   logo: {
     fontSize: 36,
@@ -145,17 +155,16 @@ const styles = StyleSheet.create({
   },
   logoHighlight: {
     color: '#2471F2',
-    textShadowColor: '#FF4500',
   },
   titleContainer: {
-    marginBottom: 25,
     alignItems: 'center',
-    paddingHorizontal: 10,
+    marginBottom: 30,
+    paddingHorizontal: 20,
   },
   heading: {
-    fontSize: 25,
+    fontSize: 28,
     fontWeight: '600',
-    color: '#fff',
+    color: '#ffffff',
     textAlign: 'center',
   },
   categoryGrid: {
@@ -176,13 +185,16 @@ const styles = StyleSheet.create({
     padding: 12,
   },
   categoryText: {
-    color: '#fff',
+    color: '#ffffff',
     fontWeight: 'bold',
     fontSize: 20,
+    textShadowColor: '#000',
+    textShadowOffset: { width: 0.5, height: 0.5 },
+    textShadowRadius: 3,
   },
   fixedButton: {
     position: 'absolute',
-    bottom: 30,
+    bottom: 50,
     left: 20,
     right: 20,
     backgroundColor: '#FFA500',
@@ -196,9 +208,8 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
   },
   buttonText: {
-    color: '#000000',
+    color: '#000',
     fontWeight: 'bold',
-    fontSize: 25,
+    fontSize: 22,
   },
 });
-

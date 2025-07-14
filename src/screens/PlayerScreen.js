@@ -1,13 +1,13 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import BottomNav from '../components/BottomNav';
+// import BottomNav from '../components/BottomNav';
 
 const PlayerScreen = () => (
   <View style={styles.wrapper}>
     <View style={styles.container}>
       <Text style={styles.text}>Player Screen</Text>
     </View>
-    <BottomNav />
+    {/* <BottomNav /> */}
   </View>
 );
 
@@ -17,15 +17,21 @@ const styles = StyleSheet.create({
     backgroundColor: '#1b0e1e',
     justifyContent: 'space-between',
   },
+
+
   container: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },
+
+  
   text: {
     color: '#fff',
     fontSize: 18,
   },
 });
+
+
 
 export default PlayerScreen;

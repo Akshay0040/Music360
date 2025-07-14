@@ -5,19 +5,17 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
+  KeyboardAvoidingView,
+  Platform,
   ScrollView,
 } from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import LinearGradient from 'react-native-linear-gradient';
-import MaskedView from '@react-native-masked-view/masked-view';
-
 
 const SignInScreen = ({ navigation }) => {
   const [rememberMe, setRememberMe] = useState(false);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-
   const [usernameError, setUsernameError] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const [loginError, setLoginError] = useState('');
@@ -26,7 +24,6 @@ const SignInScreen = ({ navigation }) => {
     setUsernameError('');
     setPasswordError('');
     setLoginError('');
-
     let isValid = true;
 
     if (!username.trim()) {
@@ -71,102 +68,118 @@ const SignInScreen = ({ navigation }) => {
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <View style={styles.logoContainer}>
-        <Text style={styles.logo}>
-          music
-          <Text style={styles.logoHighlight}>360</Text>
-        </Text>
-        <Text style={styles.subLogo}>Music + Social</Text>
-      </View>
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === 'ios' ? 'padding' : null}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 50 : 0}
+    >
+      <ScrollView
+        contentContainerStyle={styles.scrollContainer}
+        keyboardShouldPersistTaps="handled"
+      >
 
+        <View style={styles.container}>
+          {/* Logo */}
+          <View style={styles.topContent}>
+            <View style={styles.logoContainer}>
+              <Text style={styles.logo}>
+                music<Text style={styles.logoHighlight}>360</Text>
+              </Text>
+              <Text style={styles.subLogo}>Music + Social</Text>
+            </View>
 
-      <View style={styles.titleContainer}>
-        <Text style={styles.heading}>Sign In</Text>
-        <Text style={styles.text}>Enter your existing username and password</Text>
-      </View>
+            <View style={styles.titleContainer}>
+              <Text style={styles.heading}>Sign In</Text>
+              <Text style={styles.text}>
+                Enter your existing username and password
+              </Text>
+            </View>
 
-      <View style={{marginTop: -15,}}>
-        <View style={{ marginBottom: 10 }}>
-          <Text style={styles.errorText}>
-            {usernameError ? usernameError : ''}
-          </Text>
-          <View style={styles.inputContainer}>
-            <FontAwesome name="user" size={20} color="#ffffff" style={styles.icon} />
-            <TextInput
-              placeholder="Enter your username"
-              placeholderTextColor="#aaa"
-              style={styles.input}
-              value={username}
-              onChangeText={(text) => {
-                setUsername(text);
-                setUsernameError('');
-                setLoginError('');
-              }}
-            />
+            <Text style={styles.errorText}>{usernameError}</Text>
+            <View style={styles.inputContainer}>
+              <FontAwesome name="user" size={20} color="#ffffff" style={styles.icon} />
+              <TextInput
+                placeholder="Enter your username"
+                placeholderTextColor="#aaa"
+                style={styles.input}
+                value={username}
+                onChangeText={(text) => {
+                  setUsername(text);
+                  setUsernameError('');
+                  setLoginError('');
+                }}
+              />
+            </View>
+
+            <Text style={styles.errorText}>{passwordError}</Text>
+            <View style={styles.inputContainer}>
+              <FontAwesome name="lock" size={20} color="#ffffff" style={styles.icon} />
+              <TextInput
+                placeholder="Enter Password"
+                secureTextEntry
+                placeholderTextColor="#aaa"
+                style={styles.input}
+                value={password}
+                onChangeText={(text) => {
+                  setPassword(text);
+                  setPasswordError('');
+                  setLoginError('');
+                }}
+              />
+            </View>
+
+            <View style={styles.rememberMeContainer}>
+              <TouchableOpacity
+                style={[styles.customCheckbox, rememberMe && styles.checkedBox]}
+                onPress={() => setRememberMe(!rememberMe)}
+              >
+                {rememberMe && <FontAwesome name="check" size={14} color="#fff" />}
+              </TouchableOpacity>
+              <Text style={styles.rememberMeText}>Remember me</Text>
+            </View>
+
+            <View style={styles.loginErrorBox}>
+              {loginError ? <Text style={styles.errorText}>{loginError}</Text> : null}
+            </View>
+
+            <TouchableOpacity style={styles.button} onPress={handleSignIn}>
+              <Text style={styles.buttonText}>Sign In</Text>
+            </TouchableOpacity>
+
+            <Text style={styles.forgot}>Forgot Password?</Text>
           </View>
-        </View>
 
-        <View style={{ marginBottom: 5 }}>
-          <Text style={styles.errorText}>
-            {passwordError ? passwordError : ''}
-          </Text>
-          <View style={styles.inputContainer}>
-            <FontAwesome name="lock" size={20} color="#ffffff" style={styles.icon} />
-            <TextInput
-              placeholder="Enter Password"
-              secureTextEntry
-              placeholderTextColor="#aaa"
-              style={styles.input}
-              value={password}
-              onChangeText={(text) => {
-                setPassword(text);
-                setPasswordError('');
-                setLoginError('');
-              }}
-            />
+          {/* BOTTOM CONTENT */}
+          <View style={styles.linkContainer}>
+            <Text style={{ color: '#FFFFFF' }}>Don't have an account? </Text>
+            <TouchableOpacity onPress={() => navigation.navigate('SignUp')}>
+              <Text style={{ color: '#FFA500', fontWeight: 'bold' }}>Sign Up</Text>
+            </TouchableOpacity>
           </View>
+
         </View>
-      </View>
-
-      <View style={styles.rememberMeContainer}>
-        <TouchableOpacity
-          style={[styles.customCheckbox, rememberMe && styles.checkedBox]}
-          onPress={() => setRememberMe(!rememberMe)}
-        >
-          {rememberMe && <FontAwesome name="check" size={14} color="#fff" />}
-        </TouchableOpacity>
-        <Text style={styles.rememberMeText}>Remember me</Text>
-      </View>
-
-      {loginError ? <Text style={styles.errorText}>{loginError}</Text> : null}
-
-      <TouchableOpacity style={styles.button} onPress={handleSignIn}>
-        <Text style={styles.buttonText}>Sign In </Text>
-      </TouchableOpacity>
-
-      <Text style={styles.forgot}>Forgot Password?</Text>
-
-      <View style={styles.linkContainer}>
-        <Text style={{ color: '#FFFFFF' }}>Don't have an account? </Text>
-        <TouchableOpacity onPress={() => navigation.navigate('SignUp')}>
-          <Text style={{ color: '#FFA500', fontWeight: 'bold' }}>Sign Up </Text>
-        </TouchableOpacity>
-      </View>
-    </ScrollView>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
-
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: '#221224',
+  scrollContainer: {
     flexGrow: 1,
+  },
+  container: {
+    flex: 1,
+    justifyContent: 'space-between',
+    backgroundColor: '#221224',
     padding: 20,
-    paddingTop: 110,
+    paddingTop: 70,
+  },
+  topContent: {
+    flexShrink: 1,
   },
   logoContainer: {
     alignItems: 'center',
-    marginBottom: 39,
+    marginBottom: 30,
+    marginTop: 20,
   },
   logo: {
     fontSize: 36,
@@ -175,22 +188,21 @@ const styles = StyleSheet.create({
   },
   logoHighlight: {
     color: '#2471F2',
-    textShadowColor: '#FF4500',
   },
   subLogo: {
     color: '#FFA500',
     fontSize: 12,
     marginTop: -6,
+    // alignSelf: 'flex-end',
     marginLeft: 140,
   },
   titleContainer: {
-    marginBottom: 35,
+    marginBottom: 20,
   },
   heading: {
     fontSize: 29,
     color: '#fff',
     fontWeight: '600',
-
   },
   text: {
     color: '#fff',
@@ -204,10 +216,10 @@ const styles = StyleSheet.create({
     borderColor: '#6B6B6A',
     borderWidth: 1,
     paddingHorizontal: 15,
-    marginBottom: -5,
+    // marginBottom: 10,
   },
   icon: {
-    marginRight: 15,
+    marginRight: 10,
   },
   input: {
     flex: 1,
@@ -237,7 +249,6 @@ const styles = StyleSheet.create({
   },
   rememberMeText: {
     color: '#fff',
-    marginLeft: 8,
     fontSize: 17,
   },
   button: {
@@ -245,12 +256,12 @@ const styles = StyleSheet.create({
     padding: 14,
     borderRadius: 50,
     alignItems: 'center',
-    marginTop: 30,
+    marginTop: 10,
   },
   buttonText: {
-    color: '#000000',
+    color: '#000',
     fontWeight: 'bold',
-    fontSize: 30,
+    fontSize: 25,
   },
   forgot: {
     color: '#FFA500',
@@ -259,19 +270,22 @@ const styles = StyleSheet.create({
     fontSize: 17,
   },
   linkContainer: {
-    position: 'absolute',
-    bottom: 40,
-    left: 0,
-    right: 0,
+    // marginTop: 100,
     flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingBottom: 35,
+  },
+  loginErrorBox: {
+    minHeight: 20,
+    marginBottom: 3,
     justifyContent: 'center',
   },
   errorText: {
     color: 'red',
     fontSize: 12,
-    // marginBottom: 5,
+    marginBottom: 5,
     marginLeft: 10,
-    minHeight: 16,
   },
 });
 

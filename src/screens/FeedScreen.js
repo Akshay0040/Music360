@@ -7,14 +7,15 @@ import {
   Dimensions,
   SafeAreaView,
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import FeedItem from '../components/FeedItem';
-import BottomNav from '../components/BottomNav';
 import feedData from '../data/feedData.json';
 
 const { height } = Dimensions.get('window');
 
 const FeedScreen = () => {
   const [data, setData] = useState(feedData);
+  const insets = useSafeAreaInsets();
 
   const handleLike = (postId) => {
     const updated = data.map(post =>
@@ -68,13 +69,9 @@ const FeedScreen = () => {
           snapToInterval={height}
           decelerationRate="fast"
           showsVerticalScrollIndicator={false}
-          contentContainerStyle={{ paddingBottom: 100 }}
+          contentContainerStyle={{ paddingBottom: insets.bottom + 80 }}
           scrollEnabled={false}
         />
-
-        <View style={styles.bottomNavContainer}>
-          <BottomNav />
-        </View>
       </View>
     </SafeAreaView>
   );
@@ -83,26 +80,15 @@ const FeedScreen = () => {
 export default FeedScreen;
 
 const styles = StyleSheet.create({
-  container: {
-    height: Dimensions.get('window').height,
-    backgroundColor: '#000',
-  },
+  // container: {
+  //   height: Dimensions.get('window').height,
+  //   backgroundColor: '#000',
+  // },
   container: {
     flex: 1,
     position: 'relative',
     backgroundColor: '#000',
   },
-  bottomNavContainer: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    backgroundColor: '#1c1b1e',
-    zIndex: 999,
-    elevation: 20,
-    paddingBottom: 10,
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-  },
+  
 
 });
